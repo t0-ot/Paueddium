@@ -242,26 +242,26 @@ public class DefaultChunkRenderer extends ShaderChunkRenderer {
     private GlVertexAttributeBinding[] getBindingsForType() {
         if(this.vertexType == ChunkMeshFormats.COMPACT) {
             return new GlVertexAttributeBinding[] {
-                    new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_POSITION_ID,
-                            this.vertexFormat.getAttribute(ChunkMeshAttribute.POSITION_MATERIAL_MESH)),
+                    new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_POSITION_HI,
+                            this.vertexFormat.getAttribute(ChunkMeshAttribute.POSITION_HI)),
                     new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_COLOR,
-                            this.vertexFormat.getAttribute(ChunkMeshAttribute.COLOR_SHADE)),
-                    new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_BLOCK_TEXTURE,
-                            this.vertexFormat.getAttribute(ChunkMeshAttribute.BLOCK_TEXTURE)),
-                    new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_LIGHT_TEXTURE,
-                            this.vertexFormat.getAttribute(ChunkMeshAttribute.LIGHT_TEXTURE))
+                            this.vertexFormat.getAttribute(ChunkMeshAttribute.COLOR)),
+                    new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_TEXTURE,
+                            this.vertexFormat.getAttribute(ChunkMeshAttribute.TEXTURE)),
+                    new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_LIGHT_MATERIAL_INDEX,
+                            this.vertexFormat.getAttribute(ChunkMeshAttribute.LIGHT_MATERIAL_INDEX))
             };
         } else if(this.vertexType == ChunkMeshFormats.VANILLA_LIKE) {
             GlVertexFormat<ChunkMeshAttribute> vanillaFormat = this.vertexFormat;
             return new GlVertexAttributeBinding[] {
-                    new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_POSITION_ID,
-                            vanillaFormat.getAttribute(ChunkMeshAttribute.POSITION_MATERIAL_MESH)),
+                    new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_POSITION_HI,
+                            vanillaFormat.getAttribute(ChunkMeshAttribute.POSITION_HI)),
                     new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_COLOR,
-                            vanillaFormat.getAttribute(ChunkMeshAttribute.COLOR_SHADE)),
-                    new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_BLOCK_TEXTURE,
-                            vanillaFormat.getAttribute(ChunkMeshAttribute.BLOCK_TEXTURE)),
-                    new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_LIGHT_TEXTURE,
-                            vanillaFormat.getAttribute(ChunkMeshAttribute.LIGHT_TEXTURE)),
+                            vanillaFormat.getAttribute(ChunkMeshAttribute.COLOR)),
+                    new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_TEXTURE,
+                            vanillaFormat.getAttribute(ChunkMeshAttribute.TEXTURE)),
+                    new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_LIGHT_MATERIAL_INDEX,
+                            vanillaFormat.getAttribute(ChunkMeshAttribute.LIGHT_MATERIAL_INDEX))
             };
         } else
             return null; // assume Oculus/Iris will take over

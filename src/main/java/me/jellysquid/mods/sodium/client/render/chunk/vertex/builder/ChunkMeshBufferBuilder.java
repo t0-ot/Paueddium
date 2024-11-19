@@ -33,23 +33,19 @@ public class ChunkMeshBufferBuilder {
     }
 
     public void push(ChunkVertexEncoder.Vertex[] vertices, Material material) {
-        var vertexStart = this.count;
         var vertexCount = vertices.length;
 
         if (this.count + vertexCount >= this.capacity) {
             this.grow(this.stride * vertexCount);
         }
 
-        long ptr = MemoryUtil.memAddress(this.buffer, this.count * this.stride);
+        this.encoder.write(MemoryUtil.memAddress(this.buffer, this.count * this.stride),
+                material, vertices, this.sectionIndex);
 
         if (this.analyzer != null) {
             for (ChunkVertexEncoder.Vertex vertex : vertices) {
                 this.analyzer.capture(vertex);
             }
-        }
-
-        for (ChunkVertexEncoder.Vertex vertex : vertices) {
-            ptr = this.encoder.write(ptr, material, vertex, this.sectionIndex);
         }
 
         this.count += vertexCount;
