@@ -54,7 +54,7 @@ import java.util.Objects;
 public class FluidRenderer {
     // TODO: allow this to be changed by vertex format
     // TODO: move fluid rendering to a separate render pass and control glPolygonOffset and glDepthFunc to fix this properly
-    private static final float EPSILON = 0.001f;
+    private static final float EPSILON = 0.0f;
     private static final float ALIGNED_EQUALS_EPSILON = 0.011f;
 
     private final BlockPos.MutableBlockPos scratchPos = new BlockPos.MutableBlockPos();
@@ -243,10 +243,6 @@ public class FluidRenderer {
         quad.setFlags(ModelQuadFlags.IS_VANILLA_SHADED);
 
         if (!sfUp && this.isSideExposed(world, posX, posY, posZ, Direction.UP, Math.min(Math.min(northWestHeight, southWestHeight), Math.min(southEastHeight, northEastHeight)))) {
-            northWestHeight -= EPSILON;
-            southWestHeight -= EPSILON;
-            southEastHeight -= EPSILON;
-            northEastHeight -= EPSILON;
 
             Vec3 velocity = fluidState.getFlow(world, blockPos);
 
@@ -383,7 +379,7 @@ public class FluidRenderer {
                     c2 = southWestHeight;
                     x1 = 1.0F;
                     x2 = 0.0f;
-                    z1 = 1.0f - EPSILON;
+                    z1 = 1.0f;
                     z2 = z1;
                 }
                 case WEST -> {
@@ -403,7 +399,7 @@ public class FluidRenderer {
                     }
                     c1 = northEastHeight;
                     c2 = southEastHeight;
-                    x1 = 1.0f - EPSILON;
+                    x1 = 1.0f;
                     x2 = x1;
                     z1 = 0.0f;
                     z2 = 1.0F;
