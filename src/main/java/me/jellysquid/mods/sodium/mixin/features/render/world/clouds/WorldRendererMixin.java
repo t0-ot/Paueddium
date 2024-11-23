@@ -2,6 +2,7 @@ package me.jellysquid.mods.sodium.mixin.features.render.world.clouds;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.jellysquid.mods.sodium.client.render.immediate.CloudRenderer;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -12,6 +13,8 @@ import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Objects;
 
 @Mixin(value = LevelRenderer.class, priority = 990)
 public class WorldRendererMixin {
@@ -40,7 +43,9 @@ public class WorldRendererMixin {
         boolean renderFasterClouds = true; //!Screen.hasAltDown()
 
         if (renderFasterClouds) {
-            this.cloudRenderer.render(this.level, this.minecraft.player, matrices, projectionMatrix, this.ticks, tickDelta, x, y, z);
+        ClientLevel level = Objects.requireNonNull(this.level);
+        Camera camera = this.minecraft.gameRenderer.getMainCamera();
+        this.cloudRenderer.render(camera, level, projectionMatrix, matrices, this.ticks, tickDelta);
             ci.cancel();
         }
     }
