@@ -148,13 +148,25 @@ public class DefaultChunkRenderer extends ShaderChunkRenderer {
         final var pElementPointer = batch.pElementPointer;
 
         int size = batch.size;
-
-        for (int facing = 0; facing < ModelQuadFacing.COUNT; facing++) {
-            MemoryUtil.memPutInt(pBaseVertex + (size << 2), SectionRenderDataUnsafe.getVertexOffset(pMeshData, facing));
-            MemoryUtil.memPutInt(pElementCount + (size << 2), SectionRenderDataUnsafe.getElementCount(pMeshData, facing));
-            MemoryUtil.memPutAddress(pElementPointer + (size << 3), SectionRenderDataUnsafe.getIndexOffset(pMeshData, facing) & indexPointerMask);
-
-            size += (mask >> facing) & 1;
+        int elementPointer = 0;
+        int groupElementCount = 0;
+        int lastMaskBit = 0;
+        for (int facing = ModelQuadFacing.COUNT - 1; facing >= -1; facing--) {
+            final int maskBit = (mask >> facing) & 1;
+            if (maskBit == 0) {
+                if (lastMaskBit == 1) {
+                    MemoryUtil.memPutInt(pElementCount + (size << 2), groupElementCount);
+                    MemoryUtil.memPutAddress(pElementPointer + (size << 3), elementPointer);
+                    size++;
+                    groupElementCount = 0;
+                    elementPointer = 0;
+                }
+            } else {
+                groupElementCount += SectionRenderDataUnsafe.getElementCount(pMeshData, facing);
+                elementPointer += SectionRenderDataUnsafe.getIndexOffset(pMeshData, facing) & indexPointerMask;
+                MemoryUtil.memPutInt(pBaseVertex + (size << 2), SectionRenderDataUnsafe.getVertexOffset(pMeshData, facing));
+            }
+            lastMaskBit = maskBit;
         }
 
         batch.size = size;
