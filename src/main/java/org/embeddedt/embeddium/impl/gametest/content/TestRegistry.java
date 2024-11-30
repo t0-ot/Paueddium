@@ -80,8 +80,8 @@ public class TestRegistry {
     public static final SimpleChannel NETWORK_CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(EmbeddiumConstants.MODID, "gametests"),
             () -> PROTOCOL_VERSION,
-            PROTOCOL_VERSION::equals,
-            PROTOCOL_VERSION::equals
+            PROTOCOL_VERSION -> true,
+            PROTOCOL_VERSION -> true
     );
 
     /**

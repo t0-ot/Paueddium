@@ -96,8 +96,8 @@ neoForge {
 
         fun configureGameTestRun(run: RunModel) {
             run.client()
-            run.systemProperty("embeddium.enableGameTest", "true")
-            run.systemProperty("forge.enableGameTest", "true")
+            run.systemProperty("embeddium.enableGameTest", "false")
+            run.systemProperty("forge.enableGameTest", "false")
         }
 
         create("gameTestClient") {
