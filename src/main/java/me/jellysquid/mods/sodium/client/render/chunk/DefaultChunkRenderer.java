@@ -150,21 +150,30 @@ public class DefaultChunkRenderer extends ShaderChunkRenderer {
         int size = batch.size;
         int elementPointer = 0;
         int groupElementCount = 0;
+        int groupBaseVertex = 0;
         int lastMaskBit = 0;
-        for (int facing = ModelQuadFacing.COUNT - 1; facing >= -1; facing--) {
+        for (int i = 0; i <= ModelQuadFacing.COUNT; i++) {
+            var elementCountAndFacing = i == ModelQuadFacing.COUNT ? -1 : SectionRenderDataUnsafe.getElementCountAndFacing(pMeshData, i);
+            int facing = SectionRenderDataUnsafe.getFacing(elementCountAndFacing);
             final int maskBit = (mask >> facing) & 1;
             if (maskBit == 0) {
                 if (lastMaskBit == 1) {
+                    if (i != ModelQuadFacing.COUNT && SectionRenderDataUnsafe.getElementCount(elementCountAndFacing) == 0) {
+                        continue;
+                    }
                     MemoryUtil.memPutInt(pElementCount + (size << 2), groupElementCount);
+                    MemoryUtil.memPutInt(pBaseVertex + (size << 2), groupBaseVertex);
                     MemoryUtil.memPutAddress(pElementPointer + (size << 3), elementPointer);
                     size++;
                     groupElementCount = 0;
                     elementPointer = 0;
                 }
             } else {
-                groupElementCount += SectionRenderDataUnsafe.getElementCount(pMeshData, facing);
+                groupElementCount += SectionRenderDataUnsafe.getElementCount(elementCountAndFacing);
+                if (lastMaskBit == 0) {
+                    groupBaseVertex = SectionRenderDataUnsafe.getVertexOffset(pMeshData, i);
+                }
                 elementPointer += SectionRenderDataUnsafe.getIndexOffset(pMeshData, facing) & indexPointerMask;
-                MemoryUtil.memPutInt(pBaseVertex + (size << 2), SectionRenderDataUnsafe.getVertexOffset(pMeshData, facing));
             }
             lastMaskBit = maskBit;
         }
@@ -181,7 +190,7 @@ public class DefaultChunkRenderer extends ShaderChunkRenderer {
     private static final int MODEL_NEG_Y      = ModelQuadFacing.NEG_Y.ordinal();
     private static final int MODEL_NEG_Z      = ModelQuadFacing.NEG_Z.ordinal();
 
-    private static int getVisibleFaces(int originX, int originY, int originZ, int chunkX, int chunkY, int chunkZ) {
+    public static int getVisibleFaces(int originX, int originY, int originZ, int chunkX, int chunkY, int chunkZ) {
         // This is carefully written so that we can keep everything branch-less.
         //
         // Normally, this would be a ridiculous way to handle the problem. But the Hotspot VM's

@@ -39,24 +39,26 @@ public class SectionRenderDataStorage {
         int vertexOffset = allocation.getOffset();
         int indexOffset = indexAllocation != null ? indexAllocation.getOffset() * 4 : 0;
 
-        for (int facingIndex = 0; facingIndex < ModelQuadFacing.COUNT; facingIndex++) {
-            VertexRange vertexRange = ranges[facingIndex];
+        for (int i = 0; i < ModelQuadFacing.COUNT; i++) {
+            VertexRange vertexRange = ranges[i];
             int vertexCount;
+            int facing = -1;
 
             if (vertexRange != null) {
                 vertexCount = vertexRange.vertexCount();
+                facing = vertexRange.facing();
             } else {
                 vertexCount = 0;
             }
 
             int indexCount = (vertexCount >> 2) * 6;
 
-            SectionRenderDataUnsafe.setVertexOffset(pMeshData, facingIndex, vertexOffset);
-            SectionRenderDataUnsafe.setElementCount(pMeshData, facingIndex, indexCount);
-            SectionRenderDataUnsafe.setIndexOffset(pMeshData, facingIndex, indexOffset);
+            SectionRenderDataUnsafe.setVertexOffset(pMeshData, i, vertexOffset);
+            SectionRenderDataUnsafe.setElementCountAndFacing(pMeshData, i, indexCount, facing);
+            SectionRenderDataUnsafe.setIndexOffset(pMeshData, i, indexOffset);
 
             if (vertexCount > 0) {
-                sliceMask |= 1 << facingIndex;
+                sliceMask |= 1 << facing;
             }
 
             vertexOffset += vertexCount;
@@ -120,11 +122,11 @@ public class SectionRenderDataStorage {
 
         var data = this.getDataPointer(sectionIndex);
 
-        for (int facing = 0; facing < ModelQuadFacing.COUNT; facing++) {
-            SectionRenderDataUnsafe.setVertexOffset(data, facing, vertexOffset);
-            SectionRenderDataUnsafe.setIndexOffset(data, facing, indexOffset);
+        for (int i = 0; i < ModelQuadFacing.COUNT; i++) {
+            SectionRenderDataUnsafe.setVertexOffset(data, i, vertexOffset);
+            SectionRenderDataUnsafe.setIndexOffset(data, i, indexOffset);
 
-            var indexCount = SectionRenderDataUnsafe.getElementCount(data, facing);
+            var indexCount = SectionRenderDataUnsafe.getElementCount(data, i);
             vertexOffset += (indexCount / 6) * 4; // convert elements back into vertices
             indexOffset += indexCount * 4;
         }

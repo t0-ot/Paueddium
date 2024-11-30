@@ -2,6 +2,7 @@ package me.jellysquid.mods.sodium.client.render.chunk.compile.tasks;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import me.jellysquid.mods.sodium.client.SodiumClientMod;
+import me.jellysquid.mods.sodium.client.render.chunk.DefaultChunkRenderer;
 import me.jellysquid.mods.sodium.client.render.chunk.RenderSection;
 import me.jellysquid.mods.sodium.client.render.chunk.compile.ChunkBufferSorter;
 import me.jellysquid.mods.sodium.client.render.chunk.compile.ChunkBuildBuffers;
@@ -175,9 +176,13 @@ public class ChunkBuilderMeshingTask extends ChunkBuilderTask<ChunkBuildOutput> 
         }
 
         Map<TerrainRenderPass, BuiltSectionMeshParts> meshes = new Reference2ReferenceOpenHashMap<>();
+        var visibleSlices = DefaultChunkRenderer.getVisibleFaces(
+            (int) this.camera.x(), (int) this.camera.y(), (int) this.camera.z(),
+            this.render.getChunkX(), this.render.getChunkY(), this.render.getChunkZ());
 
         for (TerrainRenderPass pass : DefaultTerrainRenderPasses.ALL) {
-            BuiltSectionMeshParts mesh = buffers.createMesh(pass);
+            boolean isTranslucent = pass == DefaultTerrainRenderPasses.TRANSLUCENT;
+            BuiltSectionMeshParts mesh = buffers.createMesh(pass, visibleSlices, !isTranslucent);
 
             if (mesh != null) {
                 if(pass.isSorted()) {

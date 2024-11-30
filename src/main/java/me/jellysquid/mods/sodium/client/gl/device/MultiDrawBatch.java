@@ -54,7 +54,7 @@ public final class MultiDrawBatch {
         int elements = 0;
 
         for (var index = 0; index < this.size; index++) {
-            elements = Math.max(elements, MemoryUtil.memGetInt(this.pElementCount + ((long) index * Integer.BYTES)));
+            elements += MemoryUtil.memGetInt(this.pElementCount + ((long) index * Integer.BYTES));
         }
 
         return elements;
