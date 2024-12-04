@@ -263,6 +263,8 @@ public class DefaultChunkRenderer extends ShaderChunkRenderer {
     private GlVertexAttributeBinding[] getBindingsForType() {
         if(this.vertexType == ChunkMeshFormats.COMPACT) {
             return new GlVertexAttributeBinding[] {
+                    new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_POSITION_ID,
+                            this.vertexFormat.getAttribute(ChunkMeshAttribute.POSITION_MATERIAL_MESH)),
                     new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_POSITION_HI,
                             this.vertexFormat.getAttribute(ChunkMeshAttribute.POSITION_HI)),
                     new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_COLOR,
@@ -275,6 +277,8 @@ public class DefaultChunkRenderer extends ShaderChunkRenderer {
         } else if(this.vertexType == ChunkMeshFormats.VANILLA_LIKE) {
             GlVertexFormat<ChunkMeshAttribute> vanillaFormat = this.vertexFormat;
             return new GlVertexAttributeBinding[] {
+                    new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_POSITION_ID,
+                            vanillaFormat.getAttribute(ChunkMeshAttribute.POSITION_MATERIAL_MESH)),
                     new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_POSITION_HI,
                             vanillaFormat.getAttribute(ChunkMeshAttribute.POSITION_HI)),
                     new GlVertexAttributeBinding(ChunkShaderBindingPoints.ATTRIBUTE_COLOR,

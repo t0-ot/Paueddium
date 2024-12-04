@@ -4,6 +4,9 @@ public enum ChunkMeshAttribute {
     POSITION_HI,
     POSITION_LO,
     
+    @Deprecated
+    POSITION_MATERIAL_MESH,
+
     COLOR,
     TEXTURE,
     LIGHT_MATERIAL_INDEX,

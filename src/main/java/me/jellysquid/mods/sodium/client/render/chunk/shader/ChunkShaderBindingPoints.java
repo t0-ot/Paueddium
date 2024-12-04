@@ -1,6 +1,10 @@
 package me.jellysquid.mods.sodium.client.render.chunk.shader;
 
 public class ChunkShaderBindingPoints {
+    
+    @Deprecated
+    public static final int ATTRIBUTE_POSITION_ID = 0;
+
     public static final int ATTRIBUTE_POSITION_HI = 0;
     public static final int ATTRIBUTE_POSITION_LO = 1;
     public static final int ATTRIBUTE_COLOR = 2;
